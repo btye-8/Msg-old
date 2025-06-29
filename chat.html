@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Chat</title>
+  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+  <h2>TogetherTalk💗</h2>
+  
+  <div id="chatBox"></div>
+  <input type="text" id="message" placeholder="Type message...">
+  <button onclick="sendMessage()">Send</button>
+  <button onclick="clearChat()" id="clearBtn">Clear Chat</button>
+  <button onclick="logout()" id="logoutBtn">Logout</button>
+
+  
+
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <script>
+    const BACKEND_URL = 'https://n1-rrp3.onrender.com';
+    const socket = io(BACKEND_URL);
+    const chatBox = document.getElementById("chatBox");
+    const username = localStorage.getItem("username");
+
+    if (!username) {
+      window.location.href = "index.html";
+    }
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js')
+        .then(() => console.log('Service Worker Registered'));
+    }
+
+    if (Notification.permission !== "granted") {
+      Notification.requestPermission();
+    }
+
+    fetch(`${BACKEND_URL}/messages`)
+      .then(res => res.json())
+      .then(data => {
+        data.forEach(addMessage);
+      });
+
+    function addMessage(msg) {
+      const div = document.createElement("div");
+      div.textContent = `${msg.user}: ${msg.text}`;
+      chatBox.appendChild(div);
+    }
+
+    socket.on("new-message", msg => {
+      addMessage(msg);
+      if (msg.user !== username) {
+        navigator.serviceWorker.getRegistration().then(reg => {
+          if (reg) {
+            reg.showNotification("Friend Messenger", {
+              body: "You have a new message",
+              data: { url: "index.html" },
+              requireInteraction: true,
+              badge: "icon.png",
+              icon: "icon.png"
+            });
+          }
+        });
+        const sound = document.getElementById("notifSound");
+        sound.pause();
+        sound.currentTime = 0;
+        sound.play().catch(() => {});
+      }
+    });
+
+    function sendMessage() {
+      const text = document.getElementById("message").value;
+      const msg = { user: username, text };
+      socket.emit("new-message", msg);
+      document.getElementById("message").value = "";
+    }
+
+    function clearChat() {
+      fetch(`${BACKEND_URL}/clear`, { method: 'POST' })
+        .then(() => {
+          chatBox.innerHTML = '';
+        });
+    }
+
+    function logout() {
+      localStorage.removeItem("username");
+      window.location.href = "index.html";
+    }
+  </script>
+</body>
+</html>

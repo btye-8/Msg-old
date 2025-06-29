@@ -1,0 +1,30 @@
+body {
+  font-family: cursive;
+  padding: 1px;
+  align-content: center;
+
+
+}
+input, button {
+  
+  margin: 5px;
+  padding: 10px;
+  background-color: rgb(178, 235, 244);
+  border-radius: 5cqmax;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  border: #fff;
+}
+#chatBox {
+  font-family:system-ui, -apple-system, Georgia, 'Times New Roman', Times, serif, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  border: 1px solid #ccc;
+  height: 400px;
+  overflow-y: auto , scroll;
+  padding: 10px;
+  margin-bottom: 10px;
+  background: #51a182;
+  border-top-right-radius: 5cqmax; 
+  border-bottom-left-radius: 5cqmax;
+}
+p{
+font-family: 'Gill Sans', 
+}
