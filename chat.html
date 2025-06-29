@@ -19,7 +19,7 @@
 
   <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
   <script>
-    const BACKEND_URL = 'https://n1-rrp3.onrender.com';
+    const BACKEND_URL = 'https://m8-bac.onrender.com';
     const socket = io(BACKEND_URL);
     const chatBox = document.getElementById("chatBox");
     const username = localStorage.getItem("username");
@@ -54,7 +54,7 @@
       if (msg.user !== username) {
         navigator.serviceWorker.getRegistration().then(reg => {
           if (reg) {
-            reg.showNotification("Friend Messenger", {
+            reg.showNotification("Messenger", {
               body: "You have a new message",
               data: { url: "index.html" },
               requireInteraction: true,
